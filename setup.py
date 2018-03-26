@@ -48,7 +48,7 @@ setup(
 
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),  # Required
 
-    install_requires=['easygui'],  # Optional
+    install_requires=['easygui', 'pathlib'],  # Optional
 
     extras_require={  # Optional
         'dev': ['check-manifest'],
