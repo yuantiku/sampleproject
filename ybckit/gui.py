@@ -15,13 +15,13 @@ def _is_under_ybc_env():
     return 'YBC_ENV' in os.environ and os.environ['YBC_ENV'] is not None
 
 
-def _wrap(method):
+def _wrap(methodName, method):
     if not _is_under_ybc_env():
         return method
 
     def wrapped(*args, **kwargs):
         _locals = locals()
-        request_id = protocol.send_request(method, _locals['args'], _locals['kwargs'])
+        request_id = protocol.send_request(methodName, _locals['args'], _locals['kwargs'])
 
         while True:
             raw_response = protocol.get_raw_response(request_id)
@@ -35,7 +35,7 @@ def _wrap(method):
 
 
 for _method in ['buttonbox', 'enterbox', 'passwordbox', 'msgbox', 'diropenbox', 'fileopenbox']:
-    globals()[_method] = _wrap(getattr(eg, _method))
+    globals()[_method] = _wrap(_method, getattr(eg, _method))
 
 if __name__ == '__main__':
     globals()['buttonbox'](msg='hello world')
