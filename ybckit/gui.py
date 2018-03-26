@@ -2,6 +2,7 @@
 import os
 
 import easygui as eg
+import time
 
 from . import protocol
 
@@ -18,12 +19,14 @@ def _wrap(method):
     if not _is_under_ybc_env():
         return method
 
-    def wrapped():
-        request_id = protocol.send_request(method, locals())
+    def wrapped(*args, **kwargs):
+        _locals = locals()
+        request_id = protocol.send_request(method, _locals['args'], _locals['kwargs'])
 
         while True:
             raw_response = protocol.get_raw_response(request_id)
-            if raw_response is not False:
+            if raw_response is False:
+                time.sleep(0.1)
                 continue
 
             return protocol.parse_response(raw_response)

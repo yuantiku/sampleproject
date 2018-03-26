@@ -6,14 +6,16 @@ import time
 from pathlib import Path
 
 
-def send_request(method, args):
+def send_request(method, args, kwargs):
     """
     发送一个请求，把请求的方法和参数写到 request 文件中
+    :param args:
+    :param kwargs:
     :param method:
     :return:
     """
     id = _generate_request_id()
-    encoded_args = json.JSONEncoder().encode(args)
+    encoded_args = json.JSONEncoder().encode({"args": args, "kwargs": kwargs})
     req_file = open(_get_request_file(), 'w')
 
     file_content = "%d\n%s\n%s\nEOF\n" % (id, method, encoded_args)

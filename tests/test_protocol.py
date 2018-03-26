@@ -24,14 +24,14 @@ class ProtocolTestCase(unittest.TestCase):
         self.assertEqual("/tmp/response_123", protocol._get_response_file(123))
 
     def test_send_request(self):
-        request_id = protocol.send_request("foo", [1, 2, 3])
+        request_id = protocol.send_request(method="foo", args=[1, 2, 3], kwargs=None)
         logger.info("request_id is %d", request_id)
         self.assertGreater(request_id, 0)
 
         request_file = protocol._get_request_file()
         f = open(request_file, 'r')
         content = f.read()
-        self.assertEqual("%d\nfoo\n[1, 2, 3]\nEOF\n" % request_id, content)
+        self.assertEqual("%d\nfoo\n{\"args\": [1, 2, 3], \"kwargs\": null}\nEOF\n" % request_id, content)
 
         f.close()
 
