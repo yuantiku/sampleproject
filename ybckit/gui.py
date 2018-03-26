@@ -1,7 +1,6 @@
 # coding=utf-8
 import os
 
-import easygui as eg
 import time
 
 from . import protocol
@@ -15,10 +14,7 @@ def _is_under_ybc_env():
     return 'YBC_ENV' in os.environ and os.environ['YBC_ENV'] is not None
 
 
-def _wrap(methodName, method):
-    if not _is_under_ybc_env():
-        return method
-
+def _wrap(methodName):
     def wrapped(*args, **kwargs):
         _locals = locals()
         request_id = protocol.send_request(methodName, _locals['args'], _locals['kwargs'])
@@ -35,7 +31,11 @@ def _wrap(methodName, method):
 
 
 for _method in ['buttonbox', 'enterbox', 'passwordbox', 'msgbox', 'diropenbox', 'fileopenbox']:
-    globals()[_method] = _wrap(_method, getattr(eg, _method))
+    if _is_under_ybc_env():
+        globals()[_method] = _wrap(_method)
+    else:
+        import easygui as eg
+        globals()[_method] = getattr(eg, _method)
 
 if __name__ == '__main__':
     globals()['buttonbox'](msg='hello world')

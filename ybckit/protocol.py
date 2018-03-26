@@ -32,14 +32,16 @@ def _cleanup_request_file(request_id):
     :return:
     """
     request_file = _get_request_file()
-    request_fd = open(request_file, 'r')
-    content = request_fd.read()
-    request_fd.close()
 
-    if content.startswith("%d\n" % request_id):
-        os.remove(request_file)
+    try:
+        request_fd = open(request_file, 'r')
+        content = request_fd.read()
+        request_fd.close()
 
-    pass
+        if content.startswith("%d\n" % request_id):
+            os.remove(request_file)
+    except IOError:
+        pass
 
 
 def get_raw_response(request_id):
