@@ -25,6 +25,23 @@ def send_request(method, args, kwargs):
     return id
 
 
+def _cleanup_request_file(request_id):
+    """
+    请求完成，做一些微小的清理工作
+    :param request_id:
+    :return:
+    """
+    request_file = _get_request_file()
+    request_fd = open(request_file, 'r')
+    content = request_fd.read()
+    request_fd.close()
+
+    if content.startswith("%d\n" % request_id):
+        os.remove(request_file)
+
+    pass
+
+
 def get_raw_response(request_id):
     """
     判断是否有响应返回
@@ -41,6 +58,8 @@ def get_raw_response(request_id):
 
     if not content.endswith("\nEOF\n"):
         return False
+
+    _cleanup_request_file(request_id)
 
     return content
 
