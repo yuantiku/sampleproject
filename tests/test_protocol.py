@@ -31,7 +31,10 @@ class ProtocolTestCase(unittest.TestCase):
         request_file = protocol._get_request_file()
         f = open(request_file, 'r')
         content = f.read()
-        self.assertEqual("%d\nfoo\n{\"args\": [1, 2, 3], \"kwargs\": null}\nEOF\n" % request_id, content)
+        try:
+            self.assertEqual("%d\nfoo\n{\"args\": [1, 2, 3], \"kwargs\": null}\nEOF\n" % request_id, content)
+        except AssertionError as e:
+            self.assertEqual("%d\nfoo\n{\"kwargs\": null, \"args\": [1, 2, 3]}\nEOF\n" % request_id, content)
 
         f.close()
 
