@@ -7,7 +7,6 @@ from . import protocol
 def _wrap(method_name, method):
     def wrapped(*args, **kwargs):
         if not protocol.is_under_ybc_env():
-            import easygui as eg
             return method(*args, **kwargs)
 
         _locals = locals()
