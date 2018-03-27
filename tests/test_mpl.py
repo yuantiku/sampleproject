@@ -6,7 +6,7 @@ import unittest
 import matplotlib.pyplot as plt
 import numpy as np
 
-import ybckit
+from ybckit.mpl import init as mpl_init
 from . import ybc_env
 
 logger = logging.getLogger()
@@ -19,12 +19,11 @@ class MplTestCase(unittest.TestCase):
     def setUp(self):
         super(MplTestCase, self).setUp()
         ybc_env.setup()
-        ybckit.init()
+        mpl_init()
 
     def tearDown(self):
         super(MplTestCase, self).tearDown()
         ybc_env.cleanup()
-        ybckit.cleanup()
 
     @unittest.skip("仅限本地运行，需要手动检查 /tmp/request 内容")
     def test_show(self):

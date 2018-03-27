@@ -1,23 +1,14 @@
 # coding=utf-8
-import os
 import time
 
 from . import protocol
 
 
-def _is_under_ybc_env():
-    """
-    判断当前环境是否在猿编程环境下
-    :return:
-    """
-    return 'YBC_ENV' in os.environ and os.environ['YBC_ENV'] is not None
-
-
-def _wrap(method_name):
+def _wrap(method_name, method):
     def wrapped(*args, **kwargs):
-        if not _is_under_ybc_env():
+        if not protocol.is_under_ybc_env():
             import easygui as eg
-            return getattr(eg, _method)(*args, **kwargs)
+            return method(*args, **kwargs)
 
         _locals = locals()
         request_id = protocol.send_request("python.easygui." + method_name, _locals['args'], _locals['kwargs'])
@@ -33,8 +24,10 @@ def _wrap(method_name):
     return wrapped
 
 
-for _method in ['buttonbox', 'enterbox', 'passwordbox', 'msgbox', 'diropenbox', 'fileopenbox']:
-    globals()[_method] = _wrap(_method)
+def init():
+    if not protocol.is_under_ybc_env():
+        pass
 
-if __name__ == '__main__':
-    globals()['buttonbox'](msg='hello world')
+    import easygui as eg
+    for _method in ['buttonbox', 'enterbox', 'passwordbox', 'msgbox', 'diropenbox', 'fileopenbox']:
+        setattr(eg, _method, _wrap(_method, getattr(eg, _method)))

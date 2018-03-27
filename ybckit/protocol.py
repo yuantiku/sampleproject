@@ -94,3 +94,11 @@ def _get_response_file(request_id):
 def parse_response(raw_response):
     response = raw_response[:-5]
     return json.JSONDecoder().decode(response)
+
+
+def is_under_ybc_env():
+    """
+    判断当前环境是否在猿编程环境下
+    :return:
+    """
+    return 'YBC_ENV' in os.environ and os.environ['YBC_ENV'] is not None

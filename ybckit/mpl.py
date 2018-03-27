@@ -23,8 +23,3 @@ def init():
             return protocol.parse_response(raw_response)
 
     plt.show = _show
-
-
-def cleanup():
-    if 'YBC_ENV' not in os.environ or os.environ['YBC_ENV'] is None:
-        pass
