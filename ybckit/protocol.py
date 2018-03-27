@@ -1,9 +1,13 @@
 # coding=utf-8
 import json
+import logging
 import os
 import time
 
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.NullHandler())
 
 
 def send_request(method, args, kwargs):
@@ -14,15 +18,23 @@ def send_request(method, args, kwargs):
     :param method:
     :return:
     """
-    id = _generate_request_id()
-    encoded_args = json.JSONEncoder().encode({"args": args, "kwargs": kwargs})
-    req_file = open(_get_request_file(), 'w')
 
-    file_content = "%d\n%s\n%s\nEOF\n" % (id, method, encoded_args)
+    logger.debug("send_request method=%s, args=%s, kwargs=%s" % (method, str(args), str(kwargs)))
+
+    request_id = _generate_request_id()
+    logger.debug("generated request request_id %d" % request_id)
+    encoded_args = json.JSONEncoder().encode({"args": args, "kwargs": kwargs})
+    logger.debug("encoded_args %s" % encoded_args)
+
+    request_file = _get_request_file()
+    req_file = open(request_file, 'w')
+
+    file_content = "%d\n%s\n%s\nEOF\n" % (request_id, method, encoded_args)
+    logger.debug("write request_content to file %s, content: %s" % (request_file, file_content))
     req_file.write(file_content)
     req_file.close()
 
-    return id
+    return request_id
 
 
 def _cleanup_request_file(request_id):
@@ -31,7 +43,10 @@ def _cleanup_request_file(request_id):
     :param request_id:
     :return:
     """
+
     request_file = _get_request_file()
+
+    logger.debug("cleanup request file %d, file=%s" % (request_id, request_file))
 
     try:
         request_fd = open(request_file, 'r')
@@ -51,14 +66,21 @@ def get_raw_response(request_id):
     :return:
     """
     response_file = _get_response_file(request_id)
+
+    logger.debug("check response file %s" % response_file)
+
     if not Path(response_file).exists():
+        logger.debug("response file doesn't existed")
         return False
 
     f = open(response_file, 'r')
     content = f.read()
     f.close()
 
+    logger.debug("got response content: %s" % content)
+
     if not content.endswith("\nEOF\n"):
+        logger.debug("response is not finished")
         return False
 
     _cleanup_request_file(request_id)
@@ -76,10 +98,10 @@ def _get_request_file():
 
 def _generate_request_id():
     """
-    生成一个请求 id，暂时用 (时间戳 % 10 分钟)
+    生成一个请求 id，暂时用 (时间戳 % 60 分钟)
     :return:
     """
-    return time.time() * 1000 % (10 * 60 * 1000)
+    return time.time() * 1000 % (60 * 60 * 1000)
 
 
 def _get_response_file(request_id):
@@ -94,11 +116,3 @@ def _get_response_file(request_id):
 def parse_response(raw_response):
     response = raw_response[:-5]
     return json.JSONDecoder().decode(response)
-
-
-def is_under_ybc_env():
-    """
-    判断当前环境是否在猿编程环境下
-    :return:
-    """
-    return 'YBC_ENV' in os.environ and os.environ['YBC_ENV'] is not None

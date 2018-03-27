@@ -1,34 +1,23 @@
 # coding=utf-8
 import logging
+import os
 import sys
-from logging.config import dictConfig
 
+from .config import YBC_CONFIG
 from .gui import init as gui_init
 from .mpl import init as mpl_init
-from .protocol import is_under_ybc_env
-
-logging_config = dict(
-    version=1,
-    formatters={
-        'f': {'format': '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'}
-    },
-    handlers={
-        'h': {'class': 'logging.StreamHandler',
-              'formatter': 'f',
-              'level': logging.INFO}
-    },
-    root={
-        'handlers': ['h'],
-        'level': logging.INFO,
-    },
-)
-
-dictConfig(logging_config)
 
 logger = logging.getLogger(__name__)
+logger.addHandler(logging.NullHandler())
 
 if __name__ == '__main__':
-    if not is_under_ybc_env():
+    if 'YBC_DEBUG' in os.environ:
+        logging_level = logging.DEBUG
+    else:
+        logging_level = logging.INFO
+
+    logging.basicConfig(level=logging_level)
+    if not YBC_CONFIG.isUnderYbcEnv:
         logger.error('只能在猿辅导环境下运行')
         sys.exit(1)
 
@@ -40,4 +29,4 @@ if __name__ == '__main__':
         sys.exit(1)
 
     script_file = sys.argv[1]
-    exec(open(script_file).read())
+    exec (open(script_file).read())
