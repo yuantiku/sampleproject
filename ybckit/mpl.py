@@ -13,7 +13,7 @@ def init():
 
     import matplotlib.pyplot as plt
     import mpld3
-    import protocol
+    from . import protocol
 
     def _show():
         logger.debug("show fig by mpld3")
