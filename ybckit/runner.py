@@ -29,4 +29,4 @@ if __name__ == '__main__':
         sys.exit(1)
 
     script_file = sys.argv[1]
-    exec (open(script_file).read())
+    exec(open(script_file).read())
