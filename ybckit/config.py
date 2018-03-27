@@ -24,7 +24,7 @@ class YbcConfig:
             self.responseFilePrefix = os.environ['YBC_RESPONSE_FILE_PREFIX']
 
         if 'YBC_RESPONSE_CHECK_INTERVAL' in os.environ:
-            self.responseCheckInterval = int(os.environ['responseCheckInterval'])
+            self.responseCheckInterval = float(os.environ['YBC_RESPONSE_CHECK_INTERVAL'])
 
 
 YBC_CONFIG = YbcConfig()
