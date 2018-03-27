@@ -11,9 +11,12 @@ def init():
         logger.debug("not under ybc env")
         return
 
+    import matplotlib
     import matplotlib.pyplot as plt
     import mpld3
     from . import protocol
+
+    matplotlib.use('Agg')
 
     def _show():
         logger.debug("show fig by mpld3")
