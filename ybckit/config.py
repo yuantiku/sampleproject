@@ -2,13 +2,13 @@ import os
 
 
 class YbcConfig:
-    isUnderYbcEnv = False,
+    isUnderYbcEnv = False
 
-    requestFile = None,
+    requestFile = None
 
-    responseFilePrefix = None,
+    responseFilePrefix = None
 
-    responseCheckInterval = 100,
+    responseCheckInterval = 100.0
 
     def __init__(self):
         self.reload()
