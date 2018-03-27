@@ -5,7 +5,7 @@ A Python Library for students in Yuanfudao
 .. image:: https://travis-ci.org/yuantiku/ybckit.svg?branch=master
     :target: https://travis-ci.org/yuantiku/ybckit
 
-This library wraps gui and media operation for yuanfudao web python environment.
+This library wraps easygui, matplotlib and media operation for yuanfudao web python environment.
 
 GUI Document
 ============
@@ -25,9 +25,15 @@ For example:
 
 .. code:: python
 
-  from ybckit import gui
+  import easygui
 
-  gui.enterbox(msg='Enter something.', title='any title', default='foo')
+  easygui.enterbox(msg='Enter something.', title='any title', default='foo')
+
+And run this code:
+
+.. code:: bash
+
+  python -m ybckit.runner test.py
 
 `The full document of easygui can be found here. <http://easygui.sourceforge.net/api.html>`_
 
