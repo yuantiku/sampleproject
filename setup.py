@@ -44,13 +44,13 @@ setup(
 
     keywords='yuanfudao gui media kit',  # Optional
 
-    packages=find_packages(exclude=['contrib', 'docs', 'tests']),  # Required
+    packages=find_packages(exclude=['contrib', 'docs', 'tests']),
 
-    install_requires=['easygui', 'pathlib'],  # Optional
+    install_requires=['easygui', 'pathlib', 'matplotlib', 'mpld3'],
 
     extras_require={  # Optional
         'dev': ['check-manifest'],
-        'test': ['coverage'],
+        'test': ['coverage', 'numpy'],
     },
 
     entry_points={  # Optional
