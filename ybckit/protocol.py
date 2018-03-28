@@ -79,7 +79,7 @@ def get_raw_response(request_id):
 
     logger.debug('got response content: %s' % content)
 
-    if not content.endswith('\nEOF\n'):
+    if content is None or (not content.endswith('\nEOF\n')):
         logger.debug('response is not finished')
         return False
 
@@ -143,7 +143,7 @@ def _cleanup_request_file(request_id):
         request_fd = _open(request_file, 'r')
         content = _read_file(request_fd)
 
-        if content.startswith('%d\n' % request_id):
+        if content is not None and content.startswith('%d\n' % request_id):
             request_fd.remove()
     except IOError:
         pass
