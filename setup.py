@@ -46,7 +46,7 @@ setup(
 
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),
 
-    install_requires=['easygui', 'pathlib', 'matplotlib', 'mpld3', 'openpyxl', 'jinja2'],
+    install_requires=['easygui', 'pathlib', 'matplotlib', 'mpld3', 'openpyxl', 'jinja2', 'oss2'],
 
     extras_require={  # Optional
         'dev': ['check-manifest'],

@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 def _wrap(method_name, method):
     def wrapped(*args, **kwargs):
-        if not YBC_CONFIG.isUnderYbcEnv:
+        if not YBC_CONFIG.is_under_ybc_env:
             return method(*args, **kwargs)
 
         _locals = locals()
@@ -21,7 +21,7 @@ def _wrap(method_name, method):
         while True:
             raw_response = protocol.get_raw_response(request_id)
             if raw_response is False:
-                time.sleep(YBC_CONFIG.responseCheckInterval / 1000.0)
+                time.sleep(YBC_CONFIG.response_check_interval / 1000.0)
                 continue
 
             logger.debug(u"request %d got response %s" % (request_id, raw_response))

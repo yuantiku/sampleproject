@@ -6,6 +6,7 @@ import sys
 from .config import YBC_CONFIG
 from .gui import init as gui_init
 from .mpl import init as mpl_init
+from .oss import init as oss_init
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
@@ -17,10 +18,11 @@ if __name__ == '__main__':
         logging_level = logging.INFO
 
     logging.basicConfig(level=logging_level)
-    if not YBC_CONFIG.isUnderYbcEnv:
+    if not YBC_CONFIG.is_under_ybc_env:
         logger.error('只能在猿辅导环境下运行')
         sys.exit(1)
 
+    oss_init()
     mpl_init()
     gui_init()
 

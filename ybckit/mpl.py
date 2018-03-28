@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 
 def init():
-    if not YBC_CONFIG.isUnderYbcEnv:
+    if not YBC_CONFIG.is_under_ybc_env:
         logger.debug("not under ybc env")
         return
 
@@ -28,7 +28,7 @@ def init():
         while True:
             raw_response = protocol.get_raw_response(request_id)
             if raw_response is False:
-                time.sleep(YBC_CONFIG.responseCheckInterval / 1000.0)
+                time.sleep(YBC_CONFIG.response_check_interval / 1000.0)
                 continue
 
             logger.debug("request %d done" % request_id)
