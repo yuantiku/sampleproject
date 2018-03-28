@@ -32,6 +32,21 @@ def _wrap(method_name, method):
 
 def init():
     import easygui as eg
-    for _method in ['buttonbox', 'enterbox', 'passwordbox', 'msgbox', 'diropenbox', 'fileopenbox']:
+    for _method in [
+        'buttonbox',
+        'enterbox',
+        'passwordbox',
+        'msgbox',
+        'diropenbox',
+        'fileopenbox',
+        'ynbox',
+        'ccbox',
+        'boolbox',
+        'multenterbox',
+        'choicebox',
+        'textbox',
+        'multpasswordbox',
+        'integerbox',
+    ]:
         logger.debug("wrap method %s" % _method)
         setattr(eg, _method, _wrap(_method, getattr(eg, _method)))
