@@ -89,6 +89,8 @@ def init():
 
     bucket = oss2.Bucket(auth, YBC_CONFIG.oss_endpoint, YBC_CONFIG.oss_bucket)
 
-    file = OssFile(bucket=bucket, key="stdout", append=True)
-    sys.stdout = file
-    sys.stderr = file
+    if YBC_CONFIG.oss_stdout is not None:
+        sys.stdout = OssFile(bucket=bucket, key=YBC_CONFIG.oss_stdout, append=True)
+
+    if YBC_CONFIG.oss_stderr is not None:
+        sys.stderr = OssFile(bucket=bucket, key=YBC_CONFIG.oss_stderr, append=True)

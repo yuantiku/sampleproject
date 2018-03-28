@@ -29,6 +29,8 @@ class YbcConfig:
 
     oss_stdout = None
 
+    oss_stderr = None
+
     def __init__(self):
         self.reload()
 
@@ -38,6 +40,8 @@ class YbcConfig:
 
         self.request_file = _read_config('YBC_REQUEST_FILE')
         self.response_file_prefix = _read_config('YBC_RESPONSE_FILE_PREFIX')
+        self.oss_stdout = _read_config('YBC_OSS_STDOUT')
+        self.oss_stderr = _read_config('YBC_OSS_STDERR')
         self.oss_bucket = _read_config('YBC_OSS_BUCKET')
         self.oss_access_key_id = _read_config('YBC_OSS_ACCESS_KEY_ID')
         self.oss_access_key_secret = _read_config('YBC_OSS_ACCESS_KEY_SECRET')
