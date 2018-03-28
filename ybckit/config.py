@@ -1,6 +1,13 @@
 # coding=utf-8
-import logging
+
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+
 import os
+
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -51,7 +58,7 @@ class YbcConfig:
         self.oss_endpoint = _read_config('YBC_OSS_ENDPOINT')
 
         if self.oss_access_key_id is not None and self.oss_sts_token:
-            logger.warning(u'存在 ossAccessKeyId 但是不存在 ossStsToken，请检查是否用了 STS 方式鉴权。直接通过 AK/SK 鉴权有泄漏私钥的风险！')
+            logger.warning('存在 ossAccessKeyId 但是不存在 ossStsToken，请检查是否用了 STS 方式鉴权。直接通过 AK/SK 鉴权有泄漏私钥的风险！')
 
         if 'YBC_RESPONSE_CHECK_INTERVAL' in os.environ:
             self.response_check_interval = float(os.environ['YBC_RESPONSE_CHECK_INTERVAL'])

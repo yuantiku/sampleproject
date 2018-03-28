@@ -1,4 +1,10 @@
 # coding=utf-8
+
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+
 import json
 import logging
 import os
@@ -7,7 +13,6 @@ import time
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
-logger.addHandler(logging.NullHandler())
 
 
 def send_request(method, args, kwargs):
@@ -19,18 +24,18 @@ def send_request(method, args, kwargs):
     :return:
     """
 
-    logger.debug("send_request method=%s, args=%s, kwargs=%s" % (method, str(args), str(kwargs)))
+    logger.debug('send_request method=%s, args=%s, kwargs=%s' % (method, str(args), str(kwargs)))
 
     request_id = _generate_request_id()
-    logger.debug("generated request request_id %d" % request_id)
+    logger.debug('generated request request_id %d' % request_id)
     encoded_args = json.JSONEncoder().encode({"args": args, "kwargs": kwargs})
-    logger.debug("encoded_args %s" % encoded_args)
+    logger.debug('encoded_args %s' % encoded_args)
 
     request_file = _get_request_file()
     req_file = open(request_file, 'w')
 
-    file_content = "%d\n%s\n%s\nEOF\n" % (request_id, method, encoded_args)
-    logger.debug("write request_content to file %s, content: %s" % (request_file, file_content))
+    file_content = '%d\n%s\n%s\nEOF\n' % (request_id, method, encoded_args)
+    logger.debug('write request_content to file %s, content: %s' % (request_file, file_content))
     req_file.write(file_content)
     req_file.close()
 
@@ -46,14 +51,14 @@ def _cleanup_request_file(request_id):
 
     request_file = _get_request_file()
 
-    logger.debug("cleanup request file %d, file=%s" % (request_id, request_file))
+    logger.debug('cleanup request file %d, file=%s' % (request_id, request_file))
 
     try:
         request_fd = open(request_file, 'r')
         content = request_fd.read()
         request_fd.close()
 
-        if content.startswith("%d\n" % request_id):
+        if content.startswith('%d\n' % request_id):
             os.remove(request_file)
     except IOError:
         pass
@@ -67,20 +72,20 @@ def get_raw_response(request_id):
     """
     response_file = _get_response_file(request_id)
 
-    logger.debug("check response file %s" % response_file)
+    logger.debug('check response file %s' % response_file)
 
     if not Path(response_file).exists():
-        logger.debug("response file doesn't existed")
+        logger.debug('response file doesn\'t existed')
         return False
 
     f = open(response_file, 'r')
     content = f.read()
     f.close()
 
-    logger.debug("got response content: %s" % content)
+    logger.debug('got response content: %s' % content)
 
-    if not content.endswith("\nEOF\n"):
-        logger.debug("response is not finished")
+    if not content.endswith('\nEOF\n'):
+        logger.debug('response is not finished')
         return False
 
     _cleanup_request_file(request_id)

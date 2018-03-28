@@ -21,20 +21,20 @@ class ProtocolTestCase(unittest.TestCase):
         ybc_env.cleanup()
 
     def test_get_response_file(self):
-        self.assertEqual("/tmp/response_123", protocol._get_response_file(123))
+        self.assertEqual('/tmp/response_123', protocol._get_response_file(123))
 
     def test_send_request(self):
         request_id = protocol.send_request(method="foo", args=[1, 2, 3], kwargs=None)
-        logger.info("request_id is %d", request_id)
+        logger.info('request_id is %d', request_id)
         self.assertGreater(request_id, 0)
 
         request_file = protocol._get_request_file()
         f = open(request_file, 'r')
         content = f.read()
         try:
-            self.assertEqual("%d\nfoo\n{\"args\": [1, 2, 3], \"kwargs\": null}\nEOF\n" % request_id, content)
+            self.assertEqual('%d\nfoo\n{"args": [1, 2, 3], "kwargs": null}\nEOF\n' % request_id, content)
         except AssertionError:
-            self.assertEqual("%d\nfoo\n{\"kwargs\": null, \"args\": [1, 2, 3]}\nEOF\n" % request_id, content)
+            self.assertEqual('%d\nfoo\n{"kwargs": null, "args": [1, 2, 3]}\nEOF\n' % request_id, content)
 
         f.close()
 

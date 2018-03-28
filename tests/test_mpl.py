@@ -25,7 +25,7 @@ class MplTestCase(unittest.TestCase):
         super(MplTestCase, self).tearDown()
         ybc_env.cleanup()
 
-    @unittest.skip(u"仅限本地运行，需要手动检查 /tmp/request 内容")
+    @unittest.skip('仅限本地运行，需要手动检查 /tmp/request 内容')
     def test_show(self):
         t = np.arange(0.0, 2.0, 0.01)
         s = 1 + np.sin(2 * np.pi * t)

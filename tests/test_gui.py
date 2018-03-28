@@ -18,7 +18,7 @@ class GuiTestCase(unittest.TestCase):
         super(GuiTestCase, self).tearDown()
         ybc_env.cleanup()
 
-    @unittest.skip(u"仅限本地运行，需要手动检查 /tmp/request 内容")
+    @unittest.skip('仅限本地运行，需要手动检查 /tmp/request 内容')
     def test_gui(self):
         easygui.buttonbox(msg="hello world!")
 
