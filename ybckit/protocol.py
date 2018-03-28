@@ -9,6 +9,8 @@ import json
 import logging
 import time
 
+from oss2.exceptions import NoSuchKey
+
 from .config import YBC_CONFIG
 from .oss import OssFile
 
@@ -43,8 +45,12 @@ def send_request(method, args, kwargs):
 
 
 def _read_file(fd):
-    content = fd.read()
-    fd.close()
+    try:
+        content = fd.read()
+    except NoSuchKey:
+        return None
+    finally:
+        fd.close()
 
     if type(content) is not OssFile:
         return content
