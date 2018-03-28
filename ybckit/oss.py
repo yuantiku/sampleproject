@@ -18,18 +18,15 @@ logger = logging.getLogger(__name__)
 
 
 class OssFile(io.TextIOWrapper):
-    _bucket = None
-    _key = None
-    _append = None
-    _append_position = None
+    bucket = None
 
-    def __init__(self, bucket, key, append=False, encoding=None, errors=None, newline=None,
-                 line_buffering=False):
-        super(OssFile, self).__init__(io.StringIO(), encoding, errors, newline, line_buffering)
+    def __init__(self, key, append=False):
+        super(OssFile, self).__init__(io.BytesIO())
 
-        self._bucket = bucket
+        self._bucket = OssFile.bucket
         self._key = key
         self._append = append
+        self._append_position = None
 
     def fileno(self):
         raise OSError('file at oss server')
@@ -44,7 +41,7 @@ class OssFile(io.TextIOWrapper):
         return self._bucket.object_exists(self._key)
 
     def readline(self, limit=-1):
-        return super(OssFile, self).readline(limit)
+        raise NotImplementedError('readline is not implemented by oss file')
 
     def seek(self, offset, whence=io.SEEK_SET):
         raise OSError('random access is not implemented by oss file')
@@ -86,16 +83,17 @@ def init():
         auth = oss2.StsAuth(YBC_CONFIG.oss_access_key_id, YBC_CONFIG.oss_access_key_secret,
                             YBC_CONFIG.oss_access_key_secret)
     else:
+        logger.warning('存在 ossAccessKeyId 但是不存在 ossStsToken，请检查是否用了 STS 方式鉴权。直接通过 AK/SK 鉴权有泄漏私钥的风险！')
         auth = oss2.Auth(YBC_CONFIG.oss_access_key_id, YBC_CONFIG.oss_access_key_secret)
 
-    bucket = oss2.Bucket(auth, YBC_CONFIG.oss_endpoint, YBC_CONFIG.oss_bucket)
+    OssFile.bucket = oss2.Bucket(auth, YBC_CONFIG.oss_endpoint, YBC_CONFIG.oss_bucket)
 
     if YBC_CONFIG.oss_stdout is not None:
-        oss_file = OssFile(bucket=bucket, key=YBC_CONFIG.oss_stdout, append=True)
+        oss_file = OssFile(key=YBC_CONFIG.oss_stdout, append=True)
         oss_file.remove()
         sys.stdout = oss_file
 
     if YBC_CONFIG.oss_stderr is not None:
-        oss_file = OssFile(bucket=bucket, key=YBC_CONFIG.oss_stderr, append=True)
+        oss_file = OssFile(key=YBC_CONFIG.oss_stderr, append=True)
         oss_file.remove()
         sys.stderr = oss_file

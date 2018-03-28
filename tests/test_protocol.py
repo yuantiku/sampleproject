@@ -16,10 +16,6 @@ class ProtocolTestCase(unittest.TestCase):
         super(ProtocolTestCase, self).setUp()
         ybc_env.setup()
 
-    def tearDown(self):
-        super(ProtocolTestCase, self).tearDown()
-        ybc_env.cleanup()
-
     def test_get_response_file(self):
         self.assertEqual('/tmp/response_123', protocol._get_response_file(123))
 

@@ -7,10 +7,10 @@ from __future__ import unicode_literals
 
 import json
 import logging
-import os
 import time
 
-from pathlib import Path
+from .config import YBC_CONFIG
+from .oss import OssFile
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +32,7 @@ def send_request(method, args, kwargs):
     logger.debug('encoded_args %s' % encoded_args)
 
     request_file = _get_request_file()
-    req_file = open(request_file, 'w')
+    req_file = _open(request_file, 'w')
 
     file_content = '%d\n%s\n%s\nEOF\n' % (request_id, method, encoded_args)
     logger.debug('write request_content to file %s, content: %s' % (request_file, file_content))
@@ -42,26 +42,17 @@ def send_request(method, args, kwargs):
     return request_id
 
 
-def _cleanup_request_file(request_id):
-    """
-    请求完成，做一些微小的清理工作
-    :param request_id:
-    :return:
-    """
+def _read_file(fd):
+    content = fd.read()
+    fd.close()
 
-    request_file = _get_request_file()
-
-    logger.debug('cleanup request file %d, file=%s' % (request_id, request_file))
+    if type(content) is not OssFile:
+        return content
 
     try:
-        request_fd = open(request_file, 'r')
-        content = request_fd.read()
-        request_fd.close()
-
-        if content.startswith('%d\n' % request_id):
-            os.remove(request_file)
-    except IOError:
-        pass
+        return content.decode('utf-8')
+    except UnicodeDecodeError:
+        return None
 
 
 def get_raw_response(request_id):
@@ -71,16 +62,14 @@ def get_raw_response(request_id):
     :return:
     """
     response_file = _get_response_file(request_id)
-
     logger.debug('check response file %s' % response_file)
 
-    if not Path(response_file).exists():
-        logger.debug('response file doesn\'t existed')
+    try:
+        response_file_fd = _open(response_file, 'r')
+    except IOError:
         return False
 
-    f = open(response_file, 'r')
-    content = f.read()
-    f.close()
+    content = _read_file(response_file_fd)
 
     logger.debug('got response content: %s' % content)
 
@@ -93,12 +82,17 @@ def get_raw_response(request_id):
     return content
 
 
+def parse_response(raw_response):
+    response = raw_response[:-5]
+    return json.JSONDecoder().decode(response)
+
+
 def _get_request_file():
     """
     返回请求对应的文件名，请求会写这个文件
     :return:
     """
-    return os.environ['YBC_REQUEST_FILE']
+    return YBC_CONFIG.oss_request_file if YBC_CONFIG.oss_request_file is not None else YBC_CONFIG.response_file_prefix
 
 
 def _generate_request_id():
@@ -115,9 +109,35 @@ def _get_response_file(request_id):
     :param request_id:
     :return:
     """
-    return "%s%d" % (os.environ['YBC_RESPONSE_FILE_PREFIX'], request_id)
+    prefix = YBC_CONFIG.oss_response_file_prefix if YBC_CONFIG.oss_response_file_prefix is not None \
+        else YBC_CONFIG.response_file_prefix
+
+    return "%s%d" % (prefix, request_id)
 
 
-def parse_response(raw_response):
-    response = raw_response[:-5]
-    return json.JSONDecoder().decode(response)
+def _open(filename, mode):
+    if YBC_CONFIG.oss_request_file:
+        return OssFile(filename)
+    else:
+        return open(filename, mode)
+
+
+def _cleanup_request_file(request_id):
+    """
+    请求完成，做一些微小的清理工作
+    :param request_id:
+    :return:
+    """
+
+    request_file = _get_request_file()
+
+    logger.debug('cleanup request file %d, file=%s' % (request_id, request_file))
+
+    try:
+        request_fd = _open(request_file, 'r')
+        content = _read_file(request_fd)
+
+        if content.startswith('%d\n' % request_id):
+            request_fd.remove()
+    except IOError:
+        pass
