@@ -29,6 +29,7 @@ def init():
         logger.debug('show fig by mpld3')
         fig = mpld3.fig_to_dict(plt.gcf())
         request_id = protocol.send_request('python.mpld3.show', args=(), kwargs={"fig": fig})
+        plt.clf()
 
         logger.debug('got request_id %d' % request_id)
 
