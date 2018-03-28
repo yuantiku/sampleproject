@@ -18,23 +18,14 @@ class OssFile(io.TextIOWrapper):
 
     def __init__(self, bucket, key, append=False, encoding=None, errors=None, newline=None,
                  line_buffering=False):
-        super().__init__(io.StringIO(), encoding, errors, newline, line_buffering)
+        super(OssFile, self).__init__(io.StringIO(), encoding, errors, newline, line_buffering)
 
         self._bucket = bucket
         self._key = key
         self._append = append
 
-    def close(self):
-        super().close()
-
-    def detach(self):
-        super().detach()
-
     def fileno(self):
         raise OSError("file at oss server")
-
-    def flush(self):
-        pass
 
     def isatty(self):
         return False
@@ -46,7 +37,7 @@ class OssFile(io.TextIOWrapper):
         return self._bucket.object_exists(self._key)
 
     def readline(self, limit=-1):
-        return super().readline(limit)
+        return super(OssFile, self).readline(limit)
 
     def seek(self, offset, whence=io.SEEK_SET):
         raise OSError("random access is not implemented by oss file")
