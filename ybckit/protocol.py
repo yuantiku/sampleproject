@@ -52,7 +52,7 @@ def _read_file(fd):
     finally:
         fd.close()
 
-    if type(content) is not OssFile:
+    if type(fd) is not OssFile:
         return content
 
     try:
