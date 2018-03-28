@@ -53,6 +53,8 @@ def init():
         'textbox',
         'multpasswordbox',
         'integerbox',
+        'multchoicebox',
+        'codebox'
     ]:
         logger.debug('wrap method %s' % _method)
         setattr(eg, _method, _wrap(_method, getattr(eg, _method)))
