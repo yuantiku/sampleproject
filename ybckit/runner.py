@@ -12,6 +12,7 @@ from .gui import init as gui_init
 from .log import init as logging_init
 from .mpl import init as mpl_init
 from .oss import init as oss_init
+from .media import init as media_init
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +26,7 @@ if __name__ == '__main__':
     oss_init()
     mpl_init()
     gui_init()
+    media_init()
 
     if len(sys.argv) <= 1:
         logger.error('参数错误，需指定一个 script 来运行，例如 python -m ybckit.runner hello.py')

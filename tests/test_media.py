@@ -8,6 +8,8 @@ import logging
 import sys
 import unittest
 
+import ybc_speech
+
 from ybckit.media import init as media_init
 from . import ybc_env
 
@@ -29,7 +31,7 @@ class MplTestCase(unittest.TestCase):
 
     @unittest.skip('仅限本地运行，需要手动检查 /tmp/request 内容')
     def test_record(self):
-        media.record('foo', seconds=10, chunk=2048)
+        ybc_speech.record('foo', seconds=10, chunk=2048)
 
 
 if __name__ == '__main__':

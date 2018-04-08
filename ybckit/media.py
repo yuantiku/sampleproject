@@ -93,3 +93,12 @@ def snap():
         file_key = protocol.parse_response(raw_response)
         oss_file = OssFile(file_key)
         return oss_file.read()
+
+
+def init():
+    if not YBC_CONFIG.is_under_ybc_env:
+        logger.debug('not under ybc env')
+        return
+
+    import ybc_speech
+    ybc_speech.record = record

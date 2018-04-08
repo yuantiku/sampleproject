@@ -13,6 +13,6 @@ logging.getLogger('ybckit.gui').setLevel(logging.INFO)
 logging.getLogger('matplotlib').setLevel(logging.INFO)
 
 logger = logging.getLogger(__name__)
-logger.info("inited")
-logger.debug('今天天气不错啊挺风和日丽的')
+logger.info('inited')
+logger.debug('good')
 print('hello world!')
