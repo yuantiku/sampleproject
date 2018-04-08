@@ -98,7 +98,7 @@ def _get_request_file():
     返回请求对应的文件名，请求会写这个文件
     :return:
     """
-    return YBC_CONFIG.oss_request_file if YBC_CONFIG.oss_request_file is not None else YBC_CONFIG.response_file_prefix
+    return YBC_CONFIG.oss_request_file if YBC_CONFIG.oss_request_file is not None else YBC_CONFIG.request_file
 
 
 def _generate_request_id():
@@ -106,7 +106,7 @@ def _generate_request_id():
     生成一个请求 id，暂时用 (时间戳 % 60 分钟)
     :return:
     """
-    return time.time() * 1000 % (60 * 60 * 1000)
+    return int(time.time() * 1000 % (60 * 60 * 1000))
 
 
 def _get_response_file(request_id):

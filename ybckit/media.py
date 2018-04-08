@@ -1,5 +1,9 @@
+# coding=utf-8
 import logging
 import time
+import wave
+
+import pyaudio
 
 from . import protocol
 from .config import YBC_CONFIG
@@ -8,23 +12,76 @@ from .oss import OssFile
 logger = logging.getLogger(__name__)
 
 
-def record():
-    request_id = protocol.send_request("python.ybckit.record", args=(), kwargs={})
+def record(filename, seconds=5, to_dir=None, rate=16000, channels=1, chunk=1024, *args, **kwargs):
+    if not filename:
+        return -1
 
-    while True:
-        raw_response = protocol.get_raw_response(request_id)
-        if raw_response is False:
-            time.sleep(YBC_CONFIG.response_check_interval / 1000.0)
-            continue
+    if to_dir is None:
+        to_dir = './'
 
-        logger.debug('request %d done' % request_id)
-        file_key = protocol.parse_response(raw_response)
-        oss_file = OssFile(file_key)
-        return oss_file.read()
+    if to_dir.endswith('/'):
+        file_path = to_dir + filename
+    else:
+        file_path = to_dir + '/' + filename
+
+    pa = pyaudio.PyAudio()
+
+    if not YBC_CONFIG.is_under_ybc_env:
+        stream = pa.open(format=pyaudio.paInt16,
+                         channels=channels,
+                         rate=rate,
+                         input=True,
+                         frames_per_buffer=chunk)
+
+        print('* 开始录制')
+
+        save_buffer = []
+        for i in range(0, int(rate / chunk * seconds)):
+            audio_data = stream.read(chunk)
+            save_buffer.append(audio_data)
+
+        print('* 结束录制')
+
+        # stop
+        stream.stop_stream()
+        stream.close()
+        pa.terminate()
+
+        data = b''.join(save_buffer)
+    else:
+        _locals = locals()
+        request_id = protocol.send_request('python.ybckit.record', (), {
+            'seconds': seconds,
+            'rate': rate,
+            'channels': channels,
+        })
+
+        while True:
+            raw_response = protocol.get_raw_response(request_id)
+            if raw_response is False:
+                time.sleep(YBC_CONFIG.response_check_interval / 1000.0)
+                continue
+
+            logger.debug('request %d done' % request_id)
+            file_key = protocol.parse_response(raw_response)
+            oss_file = OssFile(file_key)
+            data = oss_file.read()
+            break
+
+    # save file
+    wf = wave.open(file_path, 'wb')
+    wf.setnchannels(channels)
+    wf.setsampwidth(pa.get_sample_size(pyaudio.paInt16, ))
+    wf.setframerate(rate)
+    wf.writeframes(data)
+    wf.close()
+
+    return file_path
 
 
 def snap():
-    request_id = protocol.send_request("python.ybckit.snap", args=(), kwargs={})
+    _locals = locals()
+    request_id = protocol.send_request("python.ybckit.snap", _locals['args'], _locals['kwargs'])
 
     while True:
         raw_response = protocol.get_raw_response(request_id)

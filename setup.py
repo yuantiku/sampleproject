@@ -5,9 +5,10 @@ https://packaging.python.org/en/latest/distributing.html
 https://github.com/yuantiku/ybckit
 """
 
-from setuptools import setup, find_packages
 from codecs import open
 from os import path
+
+from setuptools import setup, find_packages
 
 here = path.abspath(path.dirname(__file__))
 
@@ -30,23 +31,24 @@ setup(
     author_email='zhangyc@fenbi.com',
 
     # classifiers=[
-        # # How mature is this project? Common values are
-        # #   3 - Alpha
-        # #   4 - Beta
-        # #   5 - Production/Stable
-        # 'Development Status :: 3 - Alpha',
-        # 'Intended Audience :: Students',
-        # 'Topic :: Software Development :: Build Tools',
-        # 'License :: OSI Approved :: MIT License',
-        # 'Programming Language :: Python :: 2.7',
-        # 'Programming Language :: Python :: 3.6',
+    # # How mature is this project? Common values are
+    # #   3 - Alpha
+    # #   4 - Beta
+    # #   5 - Production/Stable
+    # 'Development Status :: 3 - Alpha',
+    # 'Intended Audience :: Students',
+    # 'Topic :: Software Development :: Build Tools',
+    # 'License :: OSI Approved :: MIT License',
+    # 'Programming Language :: Python :: 2.7',
+    # 'Programming Language :: Python :: 3.6',
     # ],
 
     keywords='yuanfudao gui media kit',  # Optional
 
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),
 
-    install_requires=['easygui', 'pathlib', 'matplotlib', 'mpld3', 'openpyxl', 'jinja2', 'oss2', 'ybc-box'],
+    install_requires=['easygui', 'pathlib', 'matplotlib', 'mpld3', 'openpyxl', 'jinja2', 'oss2', 'ybc-box', 'pyaudio',
+                      'wave', 'ybc_speech'],
 
     extras_require={  # Optional
         'dev': ['check-manifest'],
