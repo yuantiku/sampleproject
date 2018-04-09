@@ -18,7 +18,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 setup(
     name='ybckit',  # Required
 
-    version='0.0.36',
+    version='0.0.37',
 
     description='Python library kit for education with yuanfudao.',
 
