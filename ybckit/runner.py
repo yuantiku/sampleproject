@@ -10,9 +10,9 @@ import sys
 from .config import YBC_CONFIG
 from .gui import init as gui_init
 from .log import init as logging_init
+from .media import init as media_init
 from .mpl import init as mpl_init
 from .oss import init as oss_init
-from .media import init as media_init
 
 logger = logging.getLogger(__name__)
 
@@ -33,4 +33,4 @@ if __name__ == '__main__':
         sys.exit(1)
 
     script_file = sys.argv[1]
-    exec(open(script_file).read())
+    exec(open(script_file, 'rb').read())
