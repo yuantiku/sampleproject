@@ -12,7 +12,7 @@ from .oss import OssFile
 logger = logging.getLogger(__name__)
 
 
-def record(filename, seconds=5, to_dir=None, rate=16000, channels=1, chunk=1024, *args, **kwargs):
+def record(filename=None, seconds=5, to_dir=None, rate=16000, channels=1, chunk=1024, *args, **kwargs):
     if not filename:
         return -1
 
@@ -81,7 +81,7 @@ def record(filename, seconds=5, to_dir=None, rate=16000, channels=1, chunk=1024,
 
 def snap():
     _locals = locals()
-    request_id = protocol.send_request("python.ybckit.snap", _locals['args'], _locals['kwargs'])
+    request_id = protocol.send_request("python.ybckit.snap", [], {})
 
     while True:
         raw_response = protocol.get_raw_response(request_id)

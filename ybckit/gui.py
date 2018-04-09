@@ -61,37 +61,37 @@ def init():
         logger.debug('wrap method %s' % _method)
         setattr(eg, _method, _wrap(_method, getattr(eg, _method)))
 
-    def _buttonbox(msg, choices, title):
+    def _buttonbox(msg='', choices=[], title=''):
         return eg.buttonbox(msg, title, choices)
 
-    def _choicebox(msg, choices, title):
+    def _choicebox(msg='', choices=[], title=''):
         return eg.choicebox(msg, title, choices)
 
-    def _enterbox(msg, title):
+    def _enterbox(msg='', title=''):
         return eg.enterbox(msg, title)
 
-    def _fileopenbox(msg, title):
+    def _fileopenbox(msg='', title=''):
         return eg.fileopenbox(msg, title)[0]
 
-    def _indexbox(msg, choices, title):
+    def _indexbox(msg='', choices=[], title=''):
         return eg.indexbox(msg, title, choices)
 
-    def _msgbox(msg, image):
+    def _msgbox(msg='', image=None):
         return eg.msgbox(msg, image=image)
 
-    def _multchoicebox(msg, choices, title):
+    def _multchoicebox(msg='', choices=[], title=''):
         return eg.multchoicebox(msg, title, choices)
 
-    def _multpasswordbox(msg, title):
+    def _multpasswordbox(msg='', title=''):
         return eg.multchoicebox(msg, title)
 
-    def _passwordbox(msg, title):
+    def _passwordbox(msg='', title=''):
         return eg.passwordbox(msg, title)
 
-    def _textbox(msg, text, title):
+    def _textbox(msg='', text='', title=''):
         return eg.textbox(msg, title, text)
 
-    def _ynbox(msg, choices, title):
+    def _ynbox(msg='', choices=[], title=''):
         return eg.ynbox(msg, title, choices)
 
     setattr(yb, 'ynbox', _ynbox)
