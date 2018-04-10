@@ -54,6 +54,9 @@ def _read_file(fd):
         return content.decode('utf-8')
     except UnicodeDecodeError:
         return None
+    except AttributeError:
+        # Py3
+        return content
 
 
 def get_raw_response(request_id):
