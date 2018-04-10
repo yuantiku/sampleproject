@@ -23,7 +23,6 @@ if __name__ == '__main__':
         logger.error('只能在猿辅导环境下运行')
         sys.exit(1)
 
-    oss_init()
     mpl_init()
     gui_init()
     media_init()

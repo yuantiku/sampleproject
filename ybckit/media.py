@@ -1,4 +1,5 @@
 # coding=utf-8
+import os
 import logging
 import time
 import wave
@@ -7,7 +8,6 @@ import pyaudio
 
 from . import protocol
 from .config import YBC_CONFIG
-from .oss import OssFile
 
 logger = logging.getLogger(__name__)
 
@@ -64,8 +64,14 @@ def record(filename=None, seconds=5, to_dir=None, rate=16000, channels=1, chunk=
 
             logger.debug('request %d done' % request_id)
             file_key = protocol.parse_response(raw_response)
-            oss_file = OssFile(file_key)
-            data = oss_file.read()
+            full_path = "/sandbox" + file_key
+
+            if not os.path.isfile(full_path):
+                time.sleep(YBC_CONFIG.response_check_interval / 1000.0)
+                continue
+
+            with open(full_path) as f:
+                data = f.read()
             break
 
     # save file
@@ -91,8 +97,14 @@ def snap():
 
         logger.debug('request %d done' % request_id)
         file_key = protocol.parse_response(raw_response)
-        oss_file = OssFile(file_key)
-        return oss_file.read()
+        full_path = "/sandbox" + file_key
+
+        if not os.path.isfile(full_path):
+            time.sleep(YBC_CONFIG.response_check_interval / 1000.0)
+            continue
+
+        with open(full_path) as f:
+            return f.read()
 
 
 def init():

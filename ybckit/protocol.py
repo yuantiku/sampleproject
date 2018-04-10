@@ -9,10 +9,7 @@ import json
 import logging
 import time
 
-from oss2.exceptions import NoSuchKey
-
 from .config import YBC_CONFIG
-from .oss import OssFile
 
 logger = logging.getLogger(__name__)
 
@@ -47,13 +44,10 @@ def send_request(method, args, kwargs):
 def _read_file(fd):
     try:
         content = fd.read()
-    except NoSuchKey:
+    except IOError:
         return None
     finally:
         fd.close()
-
-    if type(fd) is not OssFile:
-        return content
 
     try:
         return content.decode('utf-8')
@@ -120,13 +114,9 @@ def _get_response_file(request_id):
 
     return "%s%d" % (prefix, request_id)
 
-
 def _open(filename, mode):
-    if YBC_CONFIG.oss_request_file:
-        return OssFile(filename)
-    else:
-        return open(filename, mode)
-
+    # TODO: buffer before write because of ossfs limitation
+    return open(filename, mode)
 
 def _cleanup_request_file(request_id):
     """
@@ -142,8 +132,9 @@ def _cleanup_request_file(request_id):
     try:
         request_fd = _open(request_file, 'r')
         content = _read_file(request_fd)
+        request_fd.close()
 
         if content is not None and content.startswith('%d\n' % request_id):
-            request_fd.remove()
+            os.remove(request_fd)
     except IOError:
         pass
