@@ -140,6 +140,6 @@ def _cleanup_request_file(request_id):
         request_fd.close()
 
         if content is not None and content.startswith('%d\n' % request_id):
-            os.remove(request_fd)
+            os.remove(request_file)
     except IOError:
         pass
