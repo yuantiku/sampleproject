@@ -8,7 +8,6 @@ from __future__ import unicode_literals
 import logging
 
 logging.getLogger('urllib3').setLevel(logging.INFO)
-logging.getLogger('oss2').setLevel(logging.INFO)
 logging.getLogger('ybckit.gui').setLevel(logging.INFO)
 logging.getLogger('matplotlib').setLevel(logging.INFO)
 
