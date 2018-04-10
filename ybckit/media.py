@@ -70,7 +70,7 @@ def record(filename=None, seconds=5, to_dir=None, rate=16000, channels=1, chunk=
                 time.sleep(YBC_CONFIG.response_check_interval / 1000.0)
                 continue
 
-            with open(full_path) as f:
+            with open(full_path, 'rb') as f:
                 data = f.read()
             break
 
