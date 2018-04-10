@@ -5,6 +5,7 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import os
 import json
 import logging
 import time
@@ -114,9 +115,11 @@ def _get_response_file(request_id):
 
     return "%s%d" % (prefix, request_id)
 
+
 def _open(filename, mode):
     # TODO: buffer before write because of ossfs limitation
     return open(filename, mode)
+
 
 def _cleanup_request_file(request_id):
     """

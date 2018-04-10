@@ -12,7 +12,6 @@ from .gui import init as gui_init
 from .log import init as logging_init
 from .media import init as media_init
 from .mpl import init as mpl_init
-from .oss import init as oss_init
 
 logger = logging.getLogger(__name__)
 
