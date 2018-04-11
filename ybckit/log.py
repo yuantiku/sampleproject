@@ -8,6 +8,7 @@ from __future__ import unicode_literals
 import os
 from logging import DEBUG, INFO, WARNING, basicConfig
 
+
 def init():
     if 'YBC_DEBUG' in os.environ:
         logging_level = DEBUG
