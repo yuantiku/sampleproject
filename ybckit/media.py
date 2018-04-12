@@ -1,12 +1,11 @@
 # coding=utf-8
 import logging
 import os
+import random
+import string
 import time
 import wave
-import string
-import random
 
-import pyaudio
 import ybc_speech
 
 from . import protocol
@@ -27,9 +26,11 @@ def record(filename=None, seconds=5, to_dir=None, rate=16000, channels=1, chunk=
     else:
         file_path = to_dir + '/' + filename
 
-    pa = pyaudio.PyAudio()
-
     if not YBC_CONFIG.is_under_ybc_env:
+        import pyaudio
+
+        pa = pyaudio.PyAudio()
+
         stream = pa.open(format=pyaudio.paInt16,
                          channels=channels,
                          rate=rate,
@@ -51,6 +52,14 @@ def record(filename=None, seconds=5, to_dir=None, rate=16000, channels=1, chunk=
         pa.terminate()
 
         data = b''.join(save_buffer)
+
+        # save file
+        wf = wave.open(file_path, 'wb')
+        wf.setnchannels(channels)
+        wf.setsampwidth(pa.get_sample_size(pyaudio.paInt16, ))
+        wf.setframerate(rate)
+        wf.writeframes(data)
+        wf.close()
     else:
         _locals = locals()
         request_id = protocol.send_request('python.ybckit.record', (), {
@@ -67,25 +76,9 @@ def record(filename=None, seconds=5, to_dir=None, rate=16000, channels=1, chunk=
 
             logger.debug('request %d done' % request_id)
             file_key = protocol.parse_response(raw_response)
-            full_path = "/sandbox" + file_key
+            os.rename(file_key, file_path)
 
-            if not os.path.isfile(full_path):
-                time.sleep(YBC_CONFIG.response_check_interval / 1000.0)
-                continue
-
-            with open(full_path, 'rb') as f:
-                data = f.read()
-            break
-
-    # save file
-    wf = wave.open(file_path, 'wb')
-    wf.setnchannels(channels)
-    wf.setsampwidth(pa.get_sample_size(pyaudio.paInt16, ))
-    wf.setframerate(rate)
-    wf.writeframes(data)
-    wf.close()
-
-    return file_path
+            return file_path
 
 
 def snap():
