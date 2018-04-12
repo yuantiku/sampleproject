@@ -1,10 +1,11 @@
 # coding=utf-8
-import os
 import logging
+import os
 import time
 import wave
 
 import pyaudio
+import ybc_speech
 
 from . import protocol
 from .config import YBC_CONFIG
@@ -107,10 +108,31 @@ def snap():
             return f.read()
 
 
+def play(filename):
+    _locals = locals()
+    request_id = protocol.send_request("python.ybckit.play", [], {"filename": filename})
+
+    while True:
+        raw_response = protocol.get_raw_response(request_id)
+        if raw_response is False:
+            time.sleep(YBC_CONFIG.response_check_interval / 1000.0)
+            continue
+
+        logger.debug('request %d done' % request_id)
+        return
+
+
+def speak(text='', model_type=2):
+    if text:
+        filename = '_____temp/tmp.wav'
+        filename = ybc_speech.text2voice(text, filename, model_type)
+        play(filename)
+
+
 def init():
     if not YBC_CONFIG.is_under_ybc_env:
         logger.debug('not under ybc env')
         return
 
-    import ybc_speech
     ybc_speech.record = record
+    ybc_speech.speak = speak
