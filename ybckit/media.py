@@ -3,6 +3,8 @@ import logging
 import os
 import time
 import wave
+import string
+import random
 
 import pyaudio
 import ybc_speech
@@ -124,7 +126,7 @@ def play(filename):
 
 def speak(text='', model_type=2):
     if text:
-        filename = '_____temp/tmp.wav'
+        filename = '_____temp/speak_%s.wav' % ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
         filename = ybc_speech.text2voice(text, filename, model_type)
         play(filename)
 
