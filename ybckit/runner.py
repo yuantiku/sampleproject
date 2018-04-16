@@ -15,12 +15,32 @@ from .mpl import init as mpl_init
 
 logger = logging.getLogger(__name__)
 
+
+class Unbuffered(object):
+    def __init__(self, stream):
+        self.stream = stream
+
+    def write(self, data):
+        self.stream.write(data)
+        self.stream.flush()
+
+    def writelines(self, datas):
+        self.stream.writelines(datas)
+        self.stream.flush()
+
+    def __getattr__(self, attr):
+        return getattr(self.stream, attr)
+
+
 if __name__ == '__main__':
     logging_init()
 
     if not YBC_CONFIG.is_under_ybc_env:
         logger.error('只能在猿辅导环境下运行')
         sys.exit(1)
+
+    sys.stdout = Unbuffered(sys.stdout)
+    sys.stderr = Unbuffered(sys.stderr)
 
     mpl_init()
     gui_init()
