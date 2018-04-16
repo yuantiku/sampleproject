@@ -6,7 +6,7 @@ from __future__ import unicode_literals
 
 import logging
 import sys
-import functools
+import os
 
 from .config import YBC_CONFIG
 from .gui import init as gui_init
@@ -33,11 +33,4 @@ if __name__ == '__main__':
 
     script_file = sys.argv[1]
 
-    _globals = globals()
-    _globals.update({
-        "print": functools.partial(print, flush=True),
-        "__file__": script_file,
-        "__name__": "__main__",
-    })
-
-    exec(open(script_file, 'rb').read(), _globals, None)
+    exec(open(script_file, 'rb').read())
