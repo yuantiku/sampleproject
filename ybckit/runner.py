@@ -35,7 +35,7 @@ if __name__ == '__main__':
 
     _globals = globals()
     _globals.update({
-        "print" : functools.partial(print, flush=True),
+        "print": functools.partial(print, flush=True),
         "__file__": script_file,
         "__name__": "__main__",
     })
