@@ -6,7 +6,6 @@ from __future__ import unicode_literals
 
 import logging
 import sys
-import os
 
 from .config import YBC_CONFIG
 from .gui import init as gui_init
