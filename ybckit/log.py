@@ -6,7 +6,8 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import os
-from logging import DEBUG, INFO, WARNING, basicConfig
+import sys
+from logging import DEBUG, INFO, WARNING, basicConfig, FileHandler, StreamHandler
 
 
 def init():
@@ -18,4 +19,9 @@ def init():
     if 'YBC_ENV' in os.environ:
         logging_level = WARNING
 
-    basicConfig(level=logging_level)
+    basicConfig(format="%(asctime)s [%(levelname)s] [%(name)s] %(message)s",
+                level=logging_level,
+                handlers=[
+                    FileHandler("/tmp/ybckit.log"),
+                    StreamHandler(sys.stdout)
+                ])
