@@ -19,9 +19,14 @@ def init():
     if 'YBC_ENV' in os.environ:
         logging_level = WARNING
 
+    console_handler = StreamHandler(sys.stdout)
+    console_handler.setLevel(logging_level)
+
+    file_handler = FileHandler("/tmp/ybckit.log")
+    file_handler.setLevel(DEBUG)
+
     basicConfig(format="%(asctime)s [%(levelname)s] [%(name)s] %(message)s",
-                level=logging_level,
                 handlers=[
-                    FileHandler("/tmp/ybckit.log"),
-                    StreamHandler(sys.stdout)
+                    file_handler,
+                    console_handler,
                 ])

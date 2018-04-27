@@ -37,14 +37,14 @@ def record(filename=None, seconds=5, to_dir=None, rate=16000, channels=1, chunk=
                          input=True,
                          frames_per_buffer=chunk)
 
-        print('* 开始录制')
+        logger.info('* 开始录制')
 
         save_buffer = []
         for i in range(0, int(rate / chunk * seconds)):
             audio_data = stream.read(chunk)
             save_buffer.append(audio_data)
 
-        print('* 结束录制')
+        logger.info('* 结束录制')
 
         # stop
         stream.stop_stream()
