@@ -40,7 +40,7 @@ def init():
     import ybc_box as yb
     import easygui as eg
 
-    for _method in [
+    method_list = [
         'buttonbox',
         'enterbox',
         'passwordbox',
@@ -57,8 +57,11 @@ def init():
         'integerbox',
         'multchoicebox',
         'codebox'
-    ]:
-        logger.debug('wrap method %s' % _method)
+    ]
+
+    logger.debug('wrap methods %s' % method_list)
+
+    for _method in method_list:
         setattr(eg, _method, _wrap(_method, getattr(eg, _method)))
 
     def _buttonbox(msg='', choices=[], title=''):
