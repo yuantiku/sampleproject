@@ -24,6 +24,8 @@ def init_if_needed(source_file):
         if isinstance(statement, ast.Import):
             for _import in statement.names:
                 all_imports.update(_import.name.split('.'))
+        if isinstance(statement, ast.ImportFrom):
+            all_imports.update([statement.module])
 
     if 'matplotlib' in all_imports:
         from .mpl import init as mpl_init
