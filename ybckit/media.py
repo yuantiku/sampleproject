@@ -26,6 +26,8 @@ def record(filename=None, seconds=5, to_dir=None, rate=16000, channels=1, chunk=
     else:
         file_path = to_dir + '/' + filename
 
+    logger.debug('save file path: %s' % file_path)
+
     if not YBC_CONFIG.is_under_ybc_env:
         import pyaudio
 
@@ -37,14 +39,14 @@ def record(filename=None, seconds=5, to_dir=None, rate=16000, channels=1, chunk=
                          input=True,
                          frames_per_buffer=chunk)
 
-        print('* 开始录制')
+        logger.info('* 开始录制')
 
         save_buffer = []
         for i in range(0, int(rate / chunk * seconds)):
             audio_data = stream.read(chunk)
             save_buffer.append(audio_data)
 
-        print('* 结束录制')
+        logger.info('* 结束录制')
 
         # stop
         stream.stop_stream()
@@ -76,6 +78,7 @@ def record(filename=None, seconds=5, to_dir=None, rate=16000, channels=1, chunk=
 
             logger.debug('request %d done' % request_id)
             file_key = protocol.parse_response(raw_response)
+            logger.debug('file_key: %s' % file_key)
             os.rename(file_key, file_path)
 
             return file_path
@@ -93,6 +96,7 @@ def snap():
 
         logger.debug('request %d done' % request_id)
         file_key = protocol.parse_response(raw_response)
+        logger.debug('file_key: %s' % file_key)
         full_path = "/sandbox" + file_key
 
         if not os.path.isfile(full_path):
