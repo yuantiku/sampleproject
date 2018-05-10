@@ -14,6 +14,20 @@ from .log import init as logging_init
 logger = logging.getLogger(__name__)
 
 
+class Unbuffered(object):
+
+    def __init__(self, file_name):
+        self.file_name = file_name
+
+    def write(self, data):
+        f = open(self.file_name, "a")
+        f.write(data)
+        f.close()
+
+    def flush(self):
+        pass
+
+
 def init_if_needed(source_file):
     all_imports = set()
 
@@ -56,5 +70,8 @@ if __name__ == '__main__':
 
     script_file = sys.argv[1]
     init_if_needed(script_file)
+
+    sys.stdout = Unbuffered(YBC_CONFIG.stdout_file)
+    sys.stderr = Unbuffered(YBC_CONFIG.stderr_file)
 
     exec(open(script_file, 'rb').read())
