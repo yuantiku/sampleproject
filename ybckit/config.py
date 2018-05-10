@@ -23,6 +23,9 @@ class YbcConfig:
         self.request_file = None
         self.response_file_prefix = None
 
+        self.stdout_file = None
+        self.stderr_file = None
+
         self.response_check_interval = 100.0
 
         self.reload()
@@ -33,6 +36,8 @@ class YbcConfig:
 
         self.request_file = _read_config('YBC_REQUEST_FILE')
         self.response_file_prefix = _read_config('YBC_RESPONSE_FILE_PREFIX')
+        self.stdout_file = _read_config('YBC_STDOUT_FILE')
+        self.stderr_file = _read_config('YBC_STDERR_FILE')
 
         if 'YBC_RESPONSE_CHECK_INTERVAL' in os.environ:
             self.response_check_interval = float(os.environ['YBC_RESPONSE_CHECK_INTERVAL'])
