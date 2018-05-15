@@ -51,7 +51,7 @@ def init_if_needed(source_file):
         logger.debug('import gui')
         gui_init()
 
-    if 'ybc_speech' in all_imports:
+    if 'ybc_speech' in all_imports or 'ybc_camera' in all_imports:
         from .media import init as media_init
         logger.debug('import media')
         media_init()

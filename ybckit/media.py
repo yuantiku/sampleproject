@@ -7,6 +7,7 @@ import time
 import wave
 
 import ybc_speech
+import ybc_camera
 
 from . import protocol
 from .config import YBC_CONFIG
@@ -135,3 +136,4 @@ def init():
 
     ybc_speech.record = record
     ybc_speech.speak = speak
+    ybc_camera.camera = snap
