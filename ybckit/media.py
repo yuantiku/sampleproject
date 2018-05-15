@@ -98,14 +98,8 @@ def snap():
         logger.debug('request %d done' % request_id)
         file_key = protocol.parse_response(raw_response)
         logger.debug('file_key: %s' % file_key)
-        full_path = "/sandbox" + file_key
+        return file_key
 
-        if not os.path.isfile(full_path):
-            time.sleep(YBC_CONFIG.response_check_interval / 1000.0)
-            continue
-
-        with open(full_path) as f:
-            return f.read()
 
 
 def play(filename):
