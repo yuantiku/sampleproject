@@ -69,9 +69,8 @@ if __name__ == '__main__':
         sys.exit(1)
 
     script_file = sys.argv[1]
-    init_if_needed(script_file)
-
     sys.stdout = Unbuffered(YBC_CONFIG.stdout_file)
     sys.stderr = Unbuffered(YBC_CONFIG.stderr_file)
 
+    init_if_needed(script_file)
     exec(open(script_file, 'rb').read())
