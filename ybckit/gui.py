@@ -91,11 +91,14 @@ def init():
     def _passwordbox(msg='', title=''):
         return eg.passwordbox(msg, title)
 
-    def _textbox(msg='', text='', title=''):
-        return eg.textbox(msg, title, text)
+    def _textbox(msg='', text='', title='', codebox=False):
+        return eg.textbox(msg, title, text, codebox)
 
     def _ynbox(msg='', choices=[], title=''):
         return eg.ynbox(msg, title, choices)
+
+    def _codebox(msg='', text='', title=''):
+        return eg.codebox(msg, title, text)
 
     setattr(yb, 'ynbox', _ynbox)
     setattr(yb, 'textbox', _textbox)
@@ -108,3 +111,4 @@ def init():
     setattr(yb, 'enterbox', _enterbox)
     setattr(yb, 'choicebox', _choicebox)
     setattr(yb, 'buttonbox', _buttonbox)
+    setattr(yb, 'codebox', _codebox)
