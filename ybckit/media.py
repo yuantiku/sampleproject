@@ -85,7 +85,10 @@ def record(filename=None, seconds=5, to_dir=None, rate=16000, channels=1, chunk=
             return file_path
 
 
-def snap():
+def snap(filename=None):
+    if filename:
+        file_path = './' + filename
+
     _locals = locals()
     request_id = protocol.send_request("python.ybckit.snap", [], {})
 
@@ -98,8 +101,13 @@ def snap():
         logger.debug('request %d done' % request_id)
         file_key = protocol.parse_response(raw_response)
         logger.debug('file_key: %s' % file_key)
-        return file_key
+        if filename:
+            os.rename(file_key, file_path)
 
+        if filename:
+            return filename
+        else:
+            return file_key
 
 
 def play(filename):
